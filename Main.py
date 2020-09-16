@@ -3,8 +3,11 @@
 import psycopg2
 
 import Variables as Var
+from collection import Collection
 from Models.Animal import Animal
 from Models.Type import Type
+from Models.contact import Contact
+from Models.country import Country
 
 
 def DBConnect():
@@ -18,7 +21,7 @@ def DBConnect():
             host="localhost",
             database="dojo_animal",
             user="postgres",
-            password="PG20"
+            password="Formation2020-at"
         )
     except(Exception, psycopg2.DatabaseError) as Error:
         # error
@@ -47,62 +50,68 @@ def ExecuteQuery(
 
     return MyResult
 
-def CreateAnimalCollection(
-    MyResult,
-    ResetCollection = True):
-    """
-        Create Animals collection from query result
-    """
-    if ResetCollection:
-        Var.Animals = []
+# def CreateAnimalCollection(
+#     MyResult,
+#     ResetCollection = True):
+#     """
+#         Create Animals collection from query result
+#     """
+#     if ResetCollection:
+#         Var.Animals = []
     
-    # create Animals collection
-    for MyAnimal in MyResult:
-        # print(f"({Animal[0]}) {Animal[1]} - {Animal[2]}")
-        # add an new instance of animal to Animals (collection of animals)
-        # this means each line in animal table (DB)
-        #    equals one instance of animal class 
-        Var.Animals.append(
-            Animal(
-                MyAnimal[0], 
-                MyAnimal[1], 
-                MyAnimal[2]))
+#     # create Animals collection
+#     for MyAnimal in MyResult:
+#         # print(f"({Animal[0]}) {Animal[1]} - {Animal[2]}")
+#         # add an new instance of animal to Animals (collection of animals)
+#         # this means each line in animal table (DB)
+#         #    equals one instance of animal class 
+#         Var.Animals.append(
+#             Animal(
+#                 MyAnimal[0], 
+#                 MyAnimal[1], 
+#                 MyAnimal[2]))
     
-def CreateTypeCollection(
-    MyResult,
-    ResetCollection = True):
-    """
-        Create Types collection from query result
-        and return collection
-    """
-    if ResetCollection:
-        Var.Types = []
+# def CreateTypeCollection(
+    # MyResult,
+    # ResetCollection = True):
+    # """
+    #     Create Types collection from query result
+    #     and return collection
+    # """
+    # if ResetCollection:
+    #     Var.Types = []
     
-    # create Animals collection
-    for MyType in MyResult:
-        Var.Types.append(
-            Type(
-                MyType[0], 
-                MyType[1], 
-                MyType[2]))
+    # # create Animals collection
+    # for MyType in MyResult:
+    #     Var.Types.append(
+    #         Type(
+    #             MyType[0], 
+    #             MyType[1], 
+    #             MyType[2]))
 
-def PrintAnimalCollection():
-    """ 
-        print Animals
-    """    
-    # print collection
-    print(f"\n Liste des animaux :")
-    for MyAnimal in Var.Animals:
-        print(f"({MyAnimal.id}) {MyAnimal.name} - {MyAnimal.type} ({MyAnimal.id_type})")
 
-def PrintTypeCollection():
-    """
-        Print Types
-    """
-    # print collection
-    print(f"\n Liste des types d'animaux :")
-    for MyType in Var.Types:
-        print(f"({MyType.id}) {MyType.name} - {MyType.id_parent}")
+
+
+
+
+# def PrintAnimalCollection():
+#     """ 
+#         print Animals
+#     """    
+#     # print collection
+#     print(f"\n Liste des animaux :")
+#     for MyAnimal in Var.Animals:
+#         print(f"({MyAnimal.id}) {MyAnimal.name} - {MyAnimal.type} ({MyAnimal.id_type})")
+
+# def PrintTypeCollection():
+#     """
+#         Print Types
+#     """
+#     # print collection
+#     print(f"\n Liste des types d'animaux :")
+#     for MyType in Var.Types:
+#         print(f"({MyType.id}) {MyType.name} - {MyType.id_parent}")
+
 
 
 def Main():
@@ -119,45 +128,42 @@ def Main():
     # # print query result
     # print(f"\n Résultat du test initial : {MyResult[0]}")
 
-    # execute query
-    MyQuery = (
-        "SELECT * " +
-        "FROM type")
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # create Types collection
-    CreateTypeCollection(MyResult)
-    # print collection
-    PrintTypeCollection()
-
-    # execute query
-    MyQuery = (
-        "SELECT * " +
-        "FROM animal " +
-        "ORDER BY animal.name")
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # print query result
-    # print(f"\n Résultat de la requête : {MyResult}")
-    # create Animals collection
-    CreateAnimalCollection(MyResult)
-    # print collection
-    PrintAnimalCollection()
-    
-    # methods to get type name
-    # method 1 : use INNER JOIN
+# * à decommenter #########################
+    # # execute query
     # MyQuery = (
-    #     "SELECT animal.id, animal.name, type.name " +
+    #     "SELECT * " +
+    #     "FROM type")
+    # MyResult = ExecuteQuery(MyConnection, MyQuery)
+    # # create Types collection
+    # CreateTypeCollection(MyResult)
+    # # print collection
+    # PrintTypeCollection()
+
+    # # execute query
+    # MyQuery = (
+    #     "SELECT * " +
     #     "FROM animal " +
-    #     "INNER JOIN type ON type.id = animal.id_type " +
     #     "ORDER BY animal.name")
     # MyResult = ExecuteQuery(MyConnection, MyQuery)
+    # # print query result
+    # # print(f"\n Résultat de la requête : {MyResult}")
+    # # create Animals collection
+    # CreateAnimalCollection(MyResult)
+    # # print collection
+    # PrintAnimalCollection()
+    # * à decommenter ############################################
+    country_collection = Collection("Country")
 
-    # method 2 : use additional query in animal
-    # see comments in Animal model
-
-    # method 3 : create and use collection of Types
-    # see model Type
-
-
+    # ? execute create and print collection
+    MyQuery = ( "SELECT * FROM country" ) # ? ------------ country à modifier ---------------------------------------
+    MyResult = ExecuteQuery(MyConnection, MyQuery)
+    # create collection
+    country_collection.create_collection(MyResult, Country) # ? ------------ Var.countries à modifier -----------------------
+    # print collection
+    country_collection.print_collection()
+    # ?
+    print(country_collection)
+    print(country_collection.name)
 
     # close resources
     MyConnection.close()

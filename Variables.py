@@ -3,5 +3,8 @@
 # global properties
 
 # collections
-Animals = []
-Types = []
+# Animals = []
+# Types = []
+# zones = []
+# countries = []
+# contacts = []
