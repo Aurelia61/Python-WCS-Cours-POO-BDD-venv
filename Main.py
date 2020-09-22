@@ -2,53 +2,52 @@
 
 import psycopg2
 
+import bdd
+
 import Variables as Var
 from collection import Collection
-from Models.Animal import Animal
-from Models.Type import Type
-from Models.contact import Contact
-from Models.country import Country
 
 
-def DBConnect():
-    """
-        Connect to Database
-    """
-    MyConnection = None
 
-    try:
-        MyConnection = psycopg2.connect(
-            host="localhost",
-            database="dojo_animal",
-            user="postgres",
-            password="Formation2020-at"
-        )
-    except(Exception, psycopg2.DatabaseError) as Error:
-        # error
-        print(f"\nCannot connect to specified DB :\n{Error}")
+# def DBConnect():
+#     """
+#         Connect to Database
+#     """
+#     MyConnection = None
 
-    return MyConnection
+#     try:
+#         MyConnection = psycopg2.connect(
+#             host="localhost",
+#             database="dojo_animal",
+#             user="postgres",
+#             password="Formation2020-at"
+#         )
+#     except(Exception, psycopg2.DatabaseError) as Error:
+#         # error
+#         print(f"\nCannot connect to specified DB :\n{Error}")
 
-def ExecuteQuery(
-    MyConnection,
-    MyQuery):
-    """
-        Execute Specified SQL query
-        return query result
-    """
-    MyResult = None
+#     return MyConnection
 
-    if MyConnection is not None:
-        # create DB cursor
-        MyCursor = MyConnection.cursor()
-        # execute query
-        MyCursor.execute(MyQuery)
-        # get result
-        MyResult = MyCursor.fetchall()
-        # close cursor
-        MyCursor.close()
+# def ExecuteQuery(
+#     MyConnection,
+#     MyQuery):
+#     """
+#         Execute Specified SQL query
+#         return query result
+#     """
+#     MyResult = None
 
-    return MyResult
+#     if MyConnection is not None:
+#         # create DB cursor
+#         MyCursor = MyConnection.cursor()
+#         # execute query
+#         MyCursor.execute(MyQuery)
+#         # get result
+#         MyResult = MyCursor.fetchall()
+#         # close cursor
+#         MyCursor.close()
+
+#     return MyResult
 
 # def CreateAnimalCollection(
 #     MyResult,
@@ -120,7 +119,14 @@ def Main():
     """
 
     # connect to DB
-    MyConnection = DBConnect()
+    MyConnection = bdd.DBConnect()
+    collection_choosen = input("\n Quelle table voulez-vous ? \n- Animal \n- contact \n- country \n- Type \n- zone\n")
+    print(f'main :: {collection_choosen}')
+    MyQuery = f"SELECT * FROM {collection_choosen}" 
+    print(f'my query :: {MyQuery}')   # ! à suppr #####################""
+    MyResult = bdd.ExecuteQuery(MyConnection, MyQuery)
+    print(f'my result dans le main :: {MyResult}')   # ! à suppr #####################
+    bdd.make_collection(f"{collection_choosen}", MyConnection, MyResult, f"{collection_choosen}.TableName" )
 
     # # try DB
     # MyQuery = "SELECT version()"
@@ -152,18 +158,16 @@ def Main():
     # # print collection
     # PrintAnimalCollection()
     # * à decommenter ############################################
-    country_collection = Collection("Country")
+    # country_collection = Collection("Country")
 
-    # ? execute create and print collection
-    MyQuery = ( "SELECT * FROM country" ) # ? ------------ country à modifier ---------------------------------------
-    MyResult = ExecuteQuery(MyConnection, MyQuery)
-    # create collection
-    country_collection.create_collection(MyResult, Country) # ? ------------ Var.countries à modifier -----------------------
-    # print collection
-    country_collection.print_collection()
-    # ?
-    print(country_collection)
-    print(country_collection.name)
+    # # ? execute create and print collection
+    # MyQuery = ( "SELECT * FROM country" ) # ? ------------ country à modifier ---------------------------------------
+    # MyResult = ExecuteQuery(MyConnection, MyQuery)
+    # # create collection
+    # country_collection.create_collection(MyResult, Country) # ? ------------ Var.countries à modifier -----------------------
+    # # print collection
+    # country_collection.print_collection()
+    # # ?
 
     # close resources
     MyConnection.close()

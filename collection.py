@@ -3,6 +3,8 @@
 
 import psycopg2
 
+import Variables as Var
+
 from Models.Animal import Animal
 from Models.Type import Type
 from Models.contact import Contact
@@ -20,7 +22,7 @@ class Collection():
             Constructor
         """
         self.name = name
-        self.collection = []
+
 
 
     def create_collection(self, MyResult, constructor, ResetCollection = True):
@@ -29,21 +31,29 @@ class Collection():
             and return collection
         """
         if ResetCollection:
-            self.collection.clear()
+            Var.collection_list.clear()
 
         # create collection
         for my_value in MyResult:
-            if len(my_value) == 2 :
-                self.collection.append(
-                    constructor(      
-                        my_value[0],
-                        my_value[1]))
-            elif len(my_value) == 3 :
-                self.collection.append(
-                    constructor(      
-                        my_value[0],
-                        my_value[1],
-                        my_value[2]))
+            Var.collection_list.append(
+                constructor(my_value))
+        return Var.collection_list
+            # elif len(my_value) == 3 :
+            #     self.collection.append(
+            #         constructor(      
+            #             my_value[0],
+            #             my_value[1],
+            #             my_value[2]))
+            # elif len(my_value) == 6:
+            #     self.collection.append(
+            #         constructor(      
+            #             my_value[0],
+            #             my_value[1],
+            #             my_value[2],
+            #             my_value[3],
+            #             my_value[4],
+            #             my_value[5]))
+
 
 
 
@@ -54,6 +64,6 @@ class Collection():
         # print collection
 
         print(f"\nLa liste de {self.name}  : \n")   # ? modifier nom de la table en fonction -------------------------------------------
-        for my_value in self.collection:
-            print(f"{my_value.id} {my_value.name}")    # ? modifier .id et .name si plus de champs ------------------------------
+        for my_value in Var.collection_list:
+            print (my_value)   # ? modifier .id et .name si plus de champs ------------------------------
         print()

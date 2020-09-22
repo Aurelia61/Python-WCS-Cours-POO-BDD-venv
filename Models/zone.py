@@ -1,16 +1,18 @@
 # coding: utf-8
 
+import psycopg2
 class Zone():
     """
         Model for zone table on database
     """
 
-    def __init__(self, id, name):
+    def __init__(self, properties):
         """
             Constructor
         """
 
         # native properties
-        self.id = id
-        self.name = name
-        
+        self.id = properties[0]
+        self.name = properties[1]
+    
+

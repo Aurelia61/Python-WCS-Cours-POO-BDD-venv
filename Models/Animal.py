@@ -1,5 +1,7 @@
 # coding: utf-8
 
+import psycopg2
+
 import Variables as Var
 
 class Animal():
@@ -7,16 +9,20 @@ class Animal():
         Model for Animal table in database
     """
 
+    # class properties
+    ListName = "animaux"
+    TableName = "animal"
+
     def __init__(self,
-        ID, Name, IDType):
+        properties):
         """
             Constructor
         """
 
         # native properties
-        self.id = ID
-        self.name = Name
-        self.id_type = IDType
+        self.id = properties[0]
+        self.name = properties[1]
+        self.id_type = properties[2]
         
         # calculated properties
         # MyQuery = (
@@ -28,8 +34,15 @@ class Animal():
         # for MyType in Var.Types:
         #     if MyType.id == self.id_type:
         #         self.type = MyType.name 
+        
         self.type = [
             MyType.name
             for MyType
             in Var.Types
             if MyType.id == self.id_type][0]
+
+        def __str__(self):
+            """
+                Overloads the print method
+            """
+            return f"{self.id} {self.name} {self.id_type}"

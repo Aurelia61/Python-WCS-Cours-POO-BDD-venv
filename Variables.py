@@ -4,7 +4,8 @@
 
 # collections
 # Animals = []
-# Types = []
+Types = []
 # zones = []
 # countries = []
 # contacts = []
+collection_list = []
